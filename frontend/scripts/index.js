@@ -8,14 +8,14 @@
 // }
 const BACKENDURL = 'http://localhost:3000'
 
-fetch(`${BACKENDURL}/test`)
-  .then(response => response.json())
-  .then(parsedResponse => console.log(parsedResponse))
+// fetch(`${BACKENDURL}/test`)
+//   .then(response => response.json())
+//   .then(parsedResponse => console.log(parsedResponse))
 
-let map = document.getElementById('map')
+let map;
 
 function initMap() {
-  var map = new google.maps.Map(document.getElementById('map'), {
+  map = new google.maps.Map(document.getElementById('map'), {
     zoom: 4.5,
     center: {lat: 37.0902, lng: -95.7129} //center of US
   });
@@ -24,7 +24,10 @@ function initMap() {
   document.getElementById('submit').addEventListener('click', function() {
     geocodeAddress(geocoder, map);
   });
+  loadMarkers();
 }
+
+let marker;
 
 function geocodeAddress(geocoder, resultsMap) {
   const address = document.getElementById('address').value;
@@ -34,14 +37,14 @@ function geocodeAddress(geocoder, resultsMap) {
 
     if (status === 'OK') {
       resultsMap.setCenter(results[0].geometry.location);
-      var marker = new google.maps.Marker({
+      marker = new google.maps.Marker({
         map: resultsMap,
         position: results[0].geometry.location,
         name: name,
         message: message,
         address: address
       });
-      console.log(createContentString(name, message))
+      pushMarker(marker)
       displayMarkerInfo(marker);
     } else {
       alert('Geocode was not successful for the following reason: ' + status);
